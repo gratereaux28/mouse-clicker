@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Event Register!</title>
+    <link rel="shortcut icon" type="image/jpg" href="/src/content/img/favicon.ico" />
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../content/bootstrap/bootstrap.min.css" />
+</head>
+
+<body>
+    <div class="row gy-3">
+        <div class="col-6">
+            <label class="form-label">Iniciar</label> <br/>
+            <label class="form-label">CTRL + F</label>
+        </div>
+        <div class="col-6">
+            <label class="form-label">Parar</label> <br/>
+            <label class="form-label">CTRL + F</label>
+        </div>
+    </div>
+    <br/>
+    <div class="mb-3">
+        <label for="event-outpu" class="form-label">Output</label>
+        <textarea class="form-control" id="event-outpu" rows="9"></textarea>
+    </div>
+    <br />
+    <div class="float-end">
+        <button type="button" class="btn btn-success" id="clicker-btnStart" onclick="">Iniciar</button>
+        <button type="button" class="btn btn-danger" id="clicker-btnStop" onclick="">Parar</button>
+    </div>
+</body>
+
+<script src="../content/js/eventregister.js"></script>
+<script src="../content/bootstrap/bootstrap.min.js"></script>
+
+</html>
