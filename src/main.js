@@ -126,6 +126,16 @@ async function setMenu(window) {
             notification.show();
           }
         },
+        {
+          label: "Toggle Dark Mode",
+          click: async () => {
+            let theme = 'light';
+            if(nativeTheme.themeSource == 'system' || nativeTheme.themeSource == 'light')
+              theme = 'dark';
+            nativeTheme.themeSource = theme;
+            window.webContents.send('toggleDarkMode', theme);
+          }
+        },
         { type: 'separator' },
         { role: 'reload' },
         { role: 'forcereload' },
@@ -141,7 +151,7 @@ async function setMenu(window) {
 
 const handleInvokes = (window) => {
 
-  ipcMain.handle('dark-mode:toggle', (theme) => {
+  ipcMain.handle('dark-mode:toggle', (event, theme) => {
     nativeTheme.themeSource = theme;
     return nativeTheme.shouldUseDarkColors;
   });

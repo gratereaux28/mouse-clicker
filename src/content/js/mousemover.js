@@ -1,10 +1,4 @@
-document.addEventListener("DOMContentLoaded", async function() {
-    const theme = window.localStorage.getItem('theme');
-    if(!theme)
-        await window.darkMode.system();
-    else
-        await window.darkMode.set(theme);
-    
+document.addEventListener("DOMContentLoaded", async function() {    
     window.api.receive('startMouseMover', () => {
         startMouseMover();
     });
@@ -63,8 +57,8 @@ async function stopMouseMover(){
 }
 
 async function onKeyChanges(){
-    const start = document.getElementById("clicker-key-start").value;
-    const stop = document.getElementById("clicker-key-stop").value;
+    const start = document.getElementById("mover-key-start").value;
+    const stop = document.getElementById("mover-key-stop").value;
     await window.shortcut.clickRegister({start, stop});
     aveIntervalChanges();
 }
@@ -98,11 +92,3 @@ async function applyIntervalChanges(){
         document.getElementById("mover-key-stop").value = changes.stop;
     }
 }
-
-// document.getElementById('toggle-dark-mode').addEventListener('click', async () => {
-//     await window.darkMode.toggle()
-//   })
-  
-//   document.getElementById('reset-to-system').addEventListener('click', async () => {
-//     await window.darkMode.system()
-//   })

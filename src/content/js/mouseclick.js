@@ -1,10 +1,4 @@
-document.addEventListener("DOMContentLoaded", async function() {
-    const theme = window.localStorage.getItem('theme');
-    if(!theme)
-        await window.darkMode.system();
-    else
-        await window.darkMode.set(theme);
-    
+document.addEventListener("DOMContentLoaded", async function() {    
     window.api.receive('startMouseClicker', () => {
         startMouseClicker();
     });
@@ -105,11 +99,3 @@ async function applyIntervalChanges(){
         document.getElementById("clicker-key-stop").value = changes.stop;
     }
 }
-
-// document.getElementById('toggle-dark-mode').addEventListener('click', async () => {
-//     await window.darkMode.toggle()
-//   })
-  
-//   document.getElementById('reset-to-system').addEventListener('click', async () => {
-//     await window.darkMode.system()
-//   })

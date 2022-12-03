@@ -19,10 +19,10 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.invoke(channel, data);
         }
     },
-    receive: (channel, func) => {
-        let validChannels = ["startMouseClicker", "stopMouseClicker", "startMouseMover", "stopMouseMover"];
+    receive: (channel, data) => {
+        let validChannels = ["startMouseClicker", "stopMouseClicker", "startMouseMover", "stopMouseMover", "toggleDarkMode"];
         if (validChannels.includes(channel)) {
-            ipcRenderer.on(channel, (event, ...args) => func(...args));
+            ipcRenderer.on(channel, data);
         }
     }
 })
