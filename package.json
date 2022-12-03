@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "node-global-key-listener": "^0.1.1",
     "robotjs": "^0.6.0"
   },
   "devDependencies": {

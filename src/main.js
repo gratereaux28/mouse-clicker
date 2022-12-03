@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain, Menu, nativeTheme, globalShortcut, Notification } = require('electron');
 const { mouseClick, moveMouse, getMousePos } = require("robotjs");
 const path = require('path');
+const { GlobalKeyboardListener } = require('node-global-key-listener');
+const gkl = new GlobalKeyboardListener();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -51,6 +53,7 @@ const createWindow = async () => {
   });
 
   loadingWindow.loadURL(path.join(__dirname, '/content/img/loading.gif'));
+
   setMenu(mainWindow);
   handleInvokes(mainWindow);
   setGlobalShortcut(mainWindow);
@@ -178,8 +181,8 @@ const handleInvokes = (window) => {
   });
 
   ipcMain.handle('minimize', () => {
-      const window = BrowserWindow.getAllWindows()[0];
-      window.minimize();
+    const window = BrowserWindow.getAllWindows()[0];
+    window.minimize();
   })
 }
 
@@ -191,4 +194,21 @@ function setGlobalShortcut(window) {
     else
       window.show();
   });
+  globalShortcut.register('CommandOrControl+P', () => {
+    gkl.addListener(calledOnce);
+  });
+  globalShortcut.register('CommandOrControl+O', () => {
+    gkl.removeListener(calledOnce);
+  });
+}
+
+calledOnce = function (e) {
+    // if(e.name.length > 1)
+  
+    if(e.state === "UP")
+      window.webContents.send('sendKeyPressed');
+  
+    // console.log(
+    //   `${e.name} ${e.state == "DOWN" ? "DOWN" : "UP  "} [${e.rawKey._nameRaw}]`
+    // );
 }

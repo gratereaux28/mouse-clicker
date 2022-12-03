@@ -14,15 +14,15 @@
     <div class="row gy-3">
         <div class="col-4">
             <label for="mover-interval-hour" class="form-label">Horas</label>
-            <input type="number" class="form-control" id="mover-interval-hour" placeholder="0" value="0">
+            <input type="number" class="form-control" id="mover-interval-hour" placeholder="0" value="0" onchange="saveIntervalChanges()">
         </div>
         <div class="col-4">
             <label for="mover-interval-minute" class="form-label">Minutos</label>
-            <input type="number" class="form-control" id="mover-interval-minute" placeholder="0" value="5">
+            <input type="number" class="form-control" id="mover-interval-minute" placeholder="0" value="5" onchange="saveIntervalChanges()">
         </div>
         <div class="col-4">
             <label for="mover-interval-second" class="form-label">Segundos</label>
-            <input type="number" class="form-control" id="mover-interval-second" placeholder="0" value="0">
+            <input type="number" class="form-control" id="mover-interval-second" placeholder="0" value="0" onchange="saveIntervalChanges()">
         </div>
     </div>
     
@@ -31,7 +31,7 @@
     <div class="row gy-3">
         <div class="col-6">
             <label for="mover-key-start" class="form-label">Iniciar: CTRL +</label>
-            <select class="form-select" id="mover-key-start">
+            <select class="form-select" id="mover-key-start" onchange="onKeyChanges()">
                 <option value="F1">F1</option>
                 <option value="F2">F2</option>
                 <option value="F3">F3</option>
@@ -48,7 +48,7 @@
         </div>
         <div class="col-6">
             <label for="mover-key-stop" class="form-label">Parar: CTRL +</label>
-            <select class="form-select" id="mover-key-stop">
+            <select class="form-select" id="mover-key-stop" onchange="onKeyChanges()">
                 <option value="F1">F1</option>
                 <option value="F2">F2</option>
                 <option value="F3">F3</option>

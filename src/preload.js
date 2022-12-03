@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('app', {
 contextBridge.exposeInMainWorld(
     "api", {
     send: (channel, data) => {
-        let validChannels = ["dark-mode:system", "dark-mode:toggle", "registerCommand", "mouseClicker"];
+        let validChannels = [];
         if (validChannels.includes(channel)) {
             ipcRenderer.send(channel, data);
         }

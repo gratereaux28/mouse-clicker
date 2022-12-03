@@ -17,10 +17,12 @@ document.addEventListener("DOMContentLoaded", async function() {
         const stop = document.getElementById("clicker-key-stop").value;
         await window.shortcut.clickRegister({start, stop});
     });
-    
+
     const start = document.getElementById("clicker-key-start").value;
     const stop = document.getElementById("clicker-key-stop").value;
     await window.shortcut.clickRegister({start, stop});
+
+    applyIntervalChanges();
 });
 
 async function startMouseClicker(){
@@ -61,6 +63,47 @@ async function stopMouseClicker(){
         window.clearInterval(i);
     }
     document.getElementById('clicker-btnStart').removeAttribute('disabled');
+}
+
+async function onKeyChanges(){
+    const start = document.getElementById("clicker-key-start").value;
+    const stop = document.getElementById("clicker-key-stop").value;
+    await window.shortcut.clickRegister({start, stop});
+    aveIntervalChanges();
+}
+
+async function saveIntervalChanges(){
+    const hours = parseInt(document.getElementById("clicker-interval-hour").value);
+    let minutes = parseInt(document.getElementById("clicker-interval-minute").value);
+    let seconds = parseInt(document.getElementById("clicker-interval-second").value);    
+    const action = document.getElementById("clicker-action-action").value;
+    const mouse = document.getElementById("clicker-action-mouse").value;    
+    const start = document.getElementById("clicker-key-start").value;
+    const stop = document.getElementById("clicker-key-stop").value;
+
+    const changes = {
+        hours,
+        minutes,
+        seconds,
+        action,
+        mouse,
+        start,
+        stop
+    };
+    window.localStorage.setItem('clicker-interval', JSON.stringify(changes));
+}
+
+async function applyIntervalChanges(){
+    const changes = JSON.parse(window.localStorage.getItem('clicker-interval'));
+    if(changes){
+        document.getElementById("clicker-interval-hour").value = changes.hours;
+        document.getElementById("clicker-interval-minute").value = changes.minutes;
+        document.getElementById("clicker-interval-second").value = changes.seconds;
+        document.getElementById("clicker-action-action").value = changes.action;
+        document.getElementById("clicker-action-mouse").value = changes.mouse;
+        document.getElementById("clicker-key-start").value = changes.start;
+        document.getElementById("clicker-key-stop").value = changes.stop;
+    }
 }
 
 // document.getElementById('toggle-dark-mode').addEventListener('click', async () => {

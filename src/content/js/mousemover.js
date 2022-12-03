@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     const start = document.getElementById("mover-key-start").value;
     const stop = document.getElementById("mover-key-stop").value;
     await window.shortcut.moveRegister({start, stop});
+
+    applyIntervalChanges();
 });
 
 async function startMouseMover(){
@@ -58,6 +60,43 @@ async function stopMouseMover(){
         window.clearInterval(i);
     }
     document.getElementById('mover-btnStart').removeAttribute('disabled');
+}
+
+async function onKeyChanges(){
+    const start = document.getElementById("clicker-key-start").value;
+    const stop = document.getElementById("clicker-key-stop").value;
+    await window.shortcut.clickRegister({start, stop});
+    aveIntervalChanges();
+}
+
+async function saveIntervalChanges(){
+    const hours = parseInt(document.getElementById("mover-interval-hour").value);
+    let minutes = parseInt(document.getElementById("mover-interval-minute").value);
+    let seconds = parseInt(document.getElementById("mover-interval-second").value);
+    
+    const start = document.getElementById("mover-key-start").value;
+    const stop = document.getElementById("mover-key-stop").value;
+
+    const changes = {
+        hours,
+        minutes,
+        seconds,
+        start,
+        stop
+    };
+
+    window.localStorage.setItem('mover-interval', JSON.stringify(changes));
+}
+
+async function applyIntervalChanges(){
+    const changes = JSON.parse(window.localStorage.getItem('mover-interval'));
+    if(changes){
+        document.getElementById("mover-interval-hour").value = changes.hours;
+        document.getElementById("mover-interval-minute").value = changes.minutes;
+        document.getElementById("mover-interval-second").value = changes.seconds;
+        document.getElementById("mover-key-start").value = changes.start;
+        document.getElementById("mover-key-stop").value = changes.stop;
+    }
 }
 
 // document.getElementById('toggle-dark-mode').addEventListener('click', async () => {
