@@ -18,6 +18,7 @@ const createWindow = async () => {
     maximizable: false,
     resizable: false,
     show: false,
+    icon: path.join(__dirname, '/content/img/favicon.ico'),
     // alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,
@@ -49,6 +50,7 @@ const createWindow = async () => {
     frame: false,
     alwaysOnTop: true,
     hasShadow: false,
+    roundedCorners: true,
     title: "Loading..."
   });
 
@@ -130,7 +132,7 @@ async function setMenu(window) {
           label: "Toggle Dark Mode",
           click: async () => {
             let theme = 'light';
-            if (nativeTheme.themeSource == 'system' || nativeTheme.themeSource == 'light')
+            if (!nativeTheme.shouldUseDarkColors && nativeTheme.themeSource == 'system' || nativeTheme.themeSource == 'light')
               theme = 'dark';
             nativeTheme.themeSource = theme;
             window.webContents.send('toggleDarkMode', theme);
@@ -152,7 +154,6 @@ async function setMenu(window) {
 const handleInvokes = (window) => {
   ipcMain.handle('dark-mode:toggle', (event, theme) => {
     nativeTheme.themeSource = theme;
-    return nativeTheme.shouldUseDarkColors;
   });
 
   ipcMain.handle('dark-mode:system', () => {
