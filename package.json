@@ -10,7 +10,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
-    "rebuild": "npm rebuild --runtime=electron --target=16.17.1 --disturl=https://atom.io/download/atom-shell --abi=99"
+    "rebuild": "pnpm rebuild --runtime=electron --target=16.17.1 --disturl=https://atom.io/download/atom-shell --abi=99"
   },
   "keywords": [],
   "author": {
