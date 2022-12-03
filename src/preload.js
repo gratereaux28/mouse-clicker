@@ -1,4 +1,3 @@
-
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('app', {
@@ -19,10 +18,10 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.invoke(channel, data);
         }
     },
-    receive: (channel, data) => {
+    receive: (channel, func) => {
         let validChannels = ["startMouseClicker", "stopMouseClicker", "startMouseMover", "stopMouseMover", "toggleDarkMode"];
         if (validChannels.includes(channel)) {
-            ipcRenderer.on(channel, data);
+            ipcRenderer.on(channel, (event, ...args) => func(...args));
         }
     }
 })
@@ -41,3 +40,15 @@ contextBridge.exposeInMainWorld('darkMode', {
     set: (theme) => ipcRenderer.invoke('dark-mode:toggle', theme),
     system: () => ipcRenderer.invoke('dark-mode:system')
 })
+
+contextBridge.exposeInMainWorld('keyPress', {
+    start: () => ipcRenderer.invoke('startKeyPress'),
+    stop: () => ipcRenderer.invoke('stoptKeyPress')
+})
+
+ipcRenderer.on("sendKeyPressed", (event, key) => {
+    let keypressed = window.localStorage.getItem('keypressed');
+    keypressed = (keypressed) ? keypressed : '';
+    keypressed = keypressed.concat(` ${key}`);
+    window.localStorage.setItem('keypressed', keypressed);
+});

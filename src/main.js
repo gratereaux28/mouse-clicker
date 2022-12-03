@@ -130,7 +130,7 @@ async function setMenu(window) {
           label: "Toggle Dark Mode",
           click: async () => {
             let theme = 'light';
-            if(nativeTheme.themeSource == 'system' || nativeTheme.themeSource == 'light')
+            if (nativeTheme.themeSource == 'system' || nativeTheme.themeSource == 'light')
               theme = 'dark';
             nativeTheme.themeSource = theme;
             window.webContents.send('toggleDarkMode', theme);
@@ -150,7 +150,6 @@ async function setMenu(window) {
 }
 
 const handleInvokes = (window) => {
-
   ipcMain.handle('dark-mode:toggle', (event, theme) => {
     nativeTheme.themeSource = theme;
     return nativeTheme.shouldUseDarkColors;
@@ -193,7 +192,16 @@ const handleInvokes = (window) => {
   ipcMain.handle('minimize', () => {
     const window = BrowserWindow.getAllWindows()[0];
     window.minimize();
-  })
+  });
+
+  ipcMain.handle('startKeyPress', () => {
+    gkl.addListener(calledOnce);
+  });
+
+  ipcMain.handle('stoptKeyPress', () => {
+    gkl.removeListener(calledOnce);
+  });
+
 }
 
 function setGlobalShortcut(window) {
@@ -213,12 +221,7 @@ function setGlobalShortcut(window) {
 }
 
 calledOnce = function (e) {
-    // if(e.name.length > 1)
-  
-    if(e.state === "UP")
-      window.webContents.send('sendKeyPressed');
-  
-    // console.log(
-    //   `${e.name} ${e.state == "DOWN" ? "DOWN" : "UP  "} [${e.rawKey._nameRaw}]`
-    // );
+  const window = BrowserWindow.getAllWindows()[0];
+  if (e.state === "UP")
+    window.webContents.send('sendKeyPressed', e.name);
 }

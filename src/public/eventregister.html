@@ -23,12 +23,13 @@
     <br/>
     <div class="mb-3">
         <label for="event-outpu" class="form-label">Output</label>
-        <textarea class="form-control" id="event-outpu" rows="9"></textarea>
+        <textarea class="form-control" id="event-output" rows="9" readonly></textarea>
     </div>
     <br />
     <div class="float-end">
-        <button type="button" class="btn btn-success" id="clicker-btnStart" onclick="">Iniciar</button>
-        <button type="button" class="btn btn-danger" id="clicker-btnStop" onclick="">Parar</button>
+        <button type="button" class="btn btn-success" id="key-btnStart" onclick="startKeyPress()">Iniciar</button>
+        <button type="button" class="btn btn-secondary" id="key-btnClear" onclick="clearKeyPress()">Limpiar</button>
+        <button type="button" class="btn btn-danger" id="key-btnStop" onclick="stopKeyPress()">Parar</button>
     </div>
 </body>
 

@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", async function() {    
     window.api.receive('startMouseClicker', () => {
         startMouseClicker();
+        document.getElementById('clicker-btnStart').setAttribute('disabled', '');
     });
     window.api.receive('stopMouseClicker', () => {
         stopMouseClicker();
+        document.getElementById('clicker-btnStart').removeAttribute('disabled');
     });
 
     document.getElementById("clicker-key-start").addEventListener("change", async function(){

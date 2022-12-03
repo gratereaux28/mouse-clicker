@@ -5,8 +5,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     else
         await window.darkMode.set(theme);
 
-    window.api.receive('toggleDarkMode', (event, theme) => {
-        console.log(theme);
+    window.api.receive('toggleDarkMode', (theme) => {
         window.localStorage.setItem('theme', theme);
     });
 });
