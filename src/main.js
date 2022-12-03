@@ -18,7 +18,7 @@ const createWindow = async () => {
     maximizable: false,
     resizable: false,
     show: false,
-    icon: path.join(__dirname, '/content/img/favicon.ico'),
+    icon: path.join(__dirname, '/public/content/img/favicon.ico'),
     // alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true,
@@ -30,7 +30,7 @@ const createWindow = async () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, '/public/index.html'));
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
@@ -54,7 +54,7 @@ const createWindow = async () => {
     title: "Loading..."
   });
 
-  loadingWindow.loadURL(path.join(__dirname, '/content/img/loading.gif'));
+  loadingWindow.loadURL(path.join(__dirname, '/public/content/img/loading.gif'));
 
   setMenu(mainWindow);
   handleInvokes(mainWindow);
@@ -91,7 +91,7 @@ async function setMenu(window) {
     {
       label: "Inicio",
       click: async () => {
-        window.loadFile(path.join(__dirname, 'index.html'));
+        window.loadFile(path.join(__dirname, '/public/index.html'));
       }
     },
     {
