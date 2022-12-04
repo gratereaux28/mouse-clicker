@@ -52,3 +52,7 @@ ipcRenderer.on("sendKeyPressed", (event, key) => {
     keypressed = keypressed.concat(` ${key}`);
     window.localStorage.setItem('keypressed', keypressed);
 });
+
+ipcRenderer.on("cleanKeyPressed", (event, key) => {
+    window.localStorage.removeItem('keypressed');
+});

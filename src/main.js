@@ -1,8 +1,7 @@
-const { app, BrowserWindow, ipcMain, Menu, nativeTheme, globalShortcut, Notification } = require('electron');
-const { mouseClick, moveMouse, getMousePos } = require("robotjs");
+const { app, BrowserWindow, Menu, shell, session } = require('electron');
 const path = require('path');
-const { GlobalKeyboardListener } = require('node-global-key-listener');
-const gkl = new GlobalKeyboardListener();
+const { getMenu } = require('./public/script/menu');
+const { handleInvokes } = require('./public/script/invoke');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -12,6 +11,7 @@ if (require('electron-squirrel-startup')) {
 const createWindow = async () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    title: 'Mouse Clicker',
     width: 510,
     height: 510,
     // autoHideMenuBar: true
@@ -21,10 +21,10 @@ const createWindow = async () => {
     icon: path.join(__dirname, '/public/content/img/favicon.ico'),
     // alwaysOnTop: true,
     webPreferences: {
-      nodeIntegration: true,
-      enableRemoteModule: true,
-      webviewTag: true,
-      contextIsolation: true,
+      // nodeIntegration: false,
+      // enableRemoteModule: false,
+      // webviewTag: true,
+      // contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
@@ -56,9 +56,8 @@ const createWindow = async () => {
 
   loadingWindow.loadURL(path.join(__dirname, '/public/content/img/loading.gif'));
 
-  setMenu(mainWindow);
+  Menu.setApplicationMenu(getMenu(mainWindow));
   handleInvokes(mainWindow);
-  setGlobalShortcut(mainWindow);
 };
 
 // This method will be called when Electron has finished
@@ -86,143 +85,19 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-async function setMenu(window) {
-  const template = [
-    {
-      label: "Inicio",
-      click: async () => {
-        window.loadFile(path.join(__dirname, '/public/index.html'));
-      }
-    },
-    {
-      label: "Mouse Click",
-      click: async () => {
-        window.loadFile(path.join(__dirname, '/public/mouseclicker.html'));
-      }
-    },
-    {
-      label: "Mouse Mover",
-      click: async () => {
-        window.loadFile(path.join(__dirname, '/public/mousemover.html'));
-      }
-    },
-    {
-      label: "Event Register",
-      click: async () => {
-        window.loadFile(path.join(__dirname, '/public/eventregister.html'));
-      }
-    },
-    {
-      label: 'Herramientas',
-      submenu: [
-        {
-          label: "Hide",
-          click: async () => {
-            window.hide();
-            const notification = new Notification({
-              title: 'Mouse Clicker',
-              subtitle: 'Haz escondido la aplicaccion',
-              body: 'Para reactivarla preciona CTRL + L',
-              hasReply: true
-            });
-            notification.show();
-          }
-        },
-        {
-          label: "Toggle Dark Mode",
-          click: async () => {
-            let theme = 'light';
-            if (!nativeTheme.shouldUseDarkColors && nativeTheme.themeSource == 'system' || nativeTheme.themeSource == 'light')
-              theme = 'dark';
-            nativeTheme.themeSource = theme;
-            window.webContents.send('toggleDarkMode', theme);
-          }
-        },
-        { type: 'separator' },
-        { role: 'reload' },
-        { role: 'forcereload' },
-        { role: 'toggledevtools' },
-        { type: 'separator' },
-      ]
+app.on('web-contents-created', (event, contents) => {
+  contents.setWindowOpenHandler(({ url }) => {
+    // In this example, we'll ask the operating system
+    // to open this event's url in the default browser.
+    //
+    // See the following item for considerations regarding what
+    // URLs should be allowed through to shell.openExternal.
+    if (isSafeForExternalOpen(url)) {
+      setImmediate(() => {
+        shell.openExternal(url)
+      })
     }
-  ]
 
-  const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
-}
-
-const handleInvokes = (window) => {
-  ipcMain.handle('dark-mode:toggle', (event, theme) => {
-    nativeTheme.themeSource = theme;
-  });
-
-  ipcMain.handle('dark-mode:system', () => {
-    nativeTheme.themeSource = 'system';
-  });
-
-  ipcMain.handle('mouseClicker', (event, arg) => {
-    mouseClick(arg.mouse, arg.action);
-  });
-
-  ipcMain.handle('mouseMover', () => {
-    const mouse = getMousePos();
-    moveMouse(mouse.x + 1, mouse.y + 1);
-    setTimeout(() => moveMouse(mouse.x, mouse.y), 1000);
-  });
-
-  ipcMain.handle('registerClickerShortcut', (event, arg) => {
-    setGlobalShortcut();
-    globalShortcut.register(`CommandOrControl+${arg.start}`, () => {
-      window.webContents.send('startMouseClicker');
-    });
-    globalShortcut.register(`CommandOrControl+${arg.stop}`, () => {
-      window.webContents.send('stopMouseClicker');
-    });
-  });
-
-  ipcMain.handle('registerMoverShortcut', (event, arg) => {
-    setGlobalShortcut();
-    globalShortcut.register(`CommandOrControl+${arg.start}`, () => {
-      window.webContents.send('startMouseMover');
-    });
-    globalShortcut.register(`CommandOrControl+${arg.stop}`, () => {
-      window.webContents.send('stopMouseMover');
-    });
-  });
-
-  ipcMain.handle('minimize', () => {
-    const window = BrowserWindow.getAllWindows()[0];
-    window.minimize();
-  });
-
-  ipcMain.handle('startKeyPress', () => {
-    gkl.addListener(calledOnce);
-  });
-
-  ipcMain.handle('stoptKeyPress', () => {
-    gkl.removeListener(calledOnce);
-  });
-
-}
-
-function setGlobalShortcut(window) {
-  globalShortcut.unregisterAll();
-  globalShortcut.register('CommandOrControl+L', () => {
-    if (window.isVisible())
-      window.hide();
-    else
-      window.show();
-  });
-  globalShortcut.register('CommandOrControl+P', () => {
-    gkl.addListener(calledOnce);
-  });
-  globalShortcut.register('CommandOrControl+O', () => {
-    gkl.removeListener(calledOnce);
-  });
-}
-
-calledOnce = function (e) {
-  const window = BrowserWindow.getAllWindows()[0];
-  if (e.state === "UP")
-    window.webContents.send('sendKeyPressed', e.name);
-}
+    return { action: 'deny' }
+  })
+})
