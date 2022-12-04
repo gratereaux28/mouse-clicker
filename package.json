@@ -1,8 +1,8 @@
 {
   "name": "mouse-clicker",
-  "productName": "mouse-clicker",
+  "productName": "Mouse Clicker",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Mouse Clicker, Mover and Event Register.",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",

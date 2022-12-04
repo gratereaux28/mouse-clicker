@@ -1,7 +1,7 @@
-const { Menu, Notification, nativeTheme, BrowserWindow } = require('electron');
+const { app, Menu, Notification, nativeTheme, BrowserWindow } = require('electron');
 const path = require('path');
 
-module.exports = { getMenu }
+module.exports = { getMenu, tryMenu }
 
 function getMenu(window) {
     const template = [
@@ -64,4 +64,21 @@ function getMenu(window) {
         }
     ]
     return Menu.buildFromTemplate(template)
+}
+
+function tryMenu(window) {
+    const template = [
+        {
+            label: 'Show App', click: function () {
+                window.show();
+            }
+        },
+        {
+            label: 'Quit', click: function () {
+                app.isQuiting = true;
+                app.quit();
+            }
+        }
+    ];
+    return Menu.buildFromTemplate(template);
 }

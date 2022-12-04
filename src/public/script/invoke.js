@@ -1,6 +1,7 @@
-const { BrowserWindow, ipcMain, nativeTheme, globalShortcut, Notification } = require('electron');
+const { BrowserWindow, ipcMain, nativeTheme, globalShortcut } = require('electron');
 const { mouseClick, moveMouse, getMousePos } = require("robotjs");
 const { GlobalKeyboardListener } = require('node-global-key-listener');
+const { windowsHideNotification } = require('./notification');
 const gkl = new GlobalKeyboardListener();
 
 module.exports = { handleInvokes, setGlobalShortcut }
@@ -70,13 +71,7 @@ function setGlobalShortcut(window) {
     globalShortcut.register('CommandOrControl+L', () => {
       if (window.isVisible()){
         window.hide();
-        const notification = new Notification({
-            title: 'Mouse Clicker',
-            subtitle: 'Haz escondido la aplicaccion',
-            body: 'Para reactivarla preciona CTRL + L',
-            hasReply: true
-        });
-        notification.show();
+        windowsHideNotification();
     }
       else
         window.show();

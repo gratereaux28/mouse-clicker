@@ -1,6 +1,7 @@
-const { app, BrowserWindow, Menu, shell, session } = require('electron');
+const { app, BrowserWindow, Menu, shell, Tray, dialog } = require('electron');
 const path = require('path');
-const { getMenu } = require('./public/script/menu');
+const { getMenu, tryMenu } = require('./public/script/menu');
+const { windowsHideNotification } = require('./public/script/notification');
 const { handleInvokes } = require('./public/script/invoke');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -56,6 +57,52 @@ const createWindow = async () => {
 
   loadingWindow.loadURL(path.join(__dirname, '/public/content/img/loading.gif'));
 
+  mainWindow.on('close', async function (event) {
+    if (!app.hasAnswerOnClose) {
+      var choice = dialog.showMessageBoxSync(this,
+        {
+          type: 'info',
+          buttons: ['Sí', 'No'],
+          title: 'Confirmación',
+          message: 'Está seguro que desea cerrar la aplicación?',
+          detail: 'La aplicación siempre recordara su decisión.'
+        });
+      if (choice == 0) {
+        app.isQuiting = true;
+        app.allwaysClose = true;
+      }
+      else if (choice == 1) {
+        app.isQuiting = false;
+        app.allwaysClose = false;
+      }
+      else {
+        event.preventDefault();
+      }
+
+      app.hasAnswerOnClose = true;
+    }
+
+    if (app.allwaysClose)
+      event.returnValue = true;
+    else if (!app.isQuiting) {
+      event.preventDefault();
+      mainWindow.hide();
+      event.returnValue = false;
+    }
+  });
+
+  let tray = new Tray(path.join(__dirname, '/public/content/img/favicon.ico'));
+
+  mainWindow.on('hide', function (event) {
+    tray = new Tray(path.join(__dirname, '/public/content/img/favicon.ico'));
+    tray.setContextMenu(tryMenu(mainWindow));
+    windowsHideNotification();
+  });
+
+  mainWindow.on('show', function (event) {
+    tray.destroy();
+  });
+
   Menu.setApplicationMenu(getMenu(mainWindow));
   handleInvokes(mainWindow);
 };
@@ -101,3 +148,7 @@ app.on('web-contents-created', (event, contents) => {
     return { action: 'deny' }
   })
 })
+
+app.on('before-quit', function () {
+  app.isQuiting = true;
+});
