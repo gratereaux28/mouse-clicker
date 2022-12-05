@@ -1,4 +1,4 @@
-const { app, Menu, Notification, nativeTheme, BrowserWindow } = require('electron');
+const { app, Menu, Notification, nativeTheme, ipcRenderer, ipcMain } = require('electron');
 const path = require('path');
 
 module.exports = { getMenu, tryMenu }
@@ -78,7 +78,63 @@ function tryMenu(window) {
                 app.isQuiting = true;
                 app.quit();
             }
-        }
+        },
+        // { type: 'separator' },
+        // {
+        //     label: 'Mouse Clicker',
+        //     submenu: [
+        //         {
+        //             label: "Start",
+        //             click: async () => {
+        //                 window.webContents.send('startMouseClicker');
+        //             }
+        //         },
+        //         {
+        //             label: "Stop",
+        //             click: async () => {
+        //                 window.webContents.send('stopMouseClicker');
+        //             }
+        //         }
+        //     ]
+        // },
+        // {
+        //     label: 'Mouse Mover',
+        //     submenu: [
+        //         {
+        //             label: "Start",
+        //             click: async () => {
+        //                 window.webContents.send('startMouseMover');
+        //             }
+        //         },
+        //         {
+        //             label: "Stop",
+        //             click: async () => {
+        //                 window.webContents.send('stopMouseMover');
+        //             }
+        //         }
+        //     ]
+        // },
+        // {
+        //     label: 'Event Register',
+        //     submenu: [
+        //         {
+        //             label: "Start",
+        //             click: async (e) => {
+        //                 if(e.label === 'Start'){
+        //                     e.label = 'Stop';
+        //                     ipcMain.emit('startKeyPress');
+        //                 }
+        //                 else{
+        //                     e.label = 'Start';
+        //                     ipcMain.emit('stoptKeyPress');
+        //                 }
+
+        //                 console.log(e);
+        //                 return e;
+        //             }
+        //         }
+        //     ]
+        // },
     ];
     return Menu.buildFromTemplate(template);
 }

@@ -46,6 +46,7 @@ const createWindow = async () => {
   var loadingWindow = new BrowserWindow({
     width: 200,
     height: 200,
+    icon: path.join(__dirname, '/public/content/img/favicon.ico'),
     transparent: (process.platform != 'linux'), // Transparency doesn't work on Linux.
     resizable: false,
     frame: false,

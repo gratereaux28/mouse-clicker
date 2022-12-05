@@ -43,6 +43,7 @@ async function startMouseMover(){
     await window.app.minimize();
     setInterval(async function(){
         await window.mouse.move();
+        console.log('move');
       }, miliseconds)
       
     document.getElementById('mover-btnStart').setAttribute('disabled', '');
