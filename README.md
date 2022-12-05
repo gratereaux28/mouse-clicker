@@ -41,4 +41,4 @@ npm start
 Currently available for Windows OS and Mac OS.
 
 ## Download ##
-Download the latest version from the [releases](https://github.com/gratereaux28/mouse-clicker/releases) page, unzip and run AutoClicker.exe.
+Download the latest version from the [releases](https://github.com/gratereaux28/mouse-clicker/releases) page, unzip and run mouse-clicker.exe.
