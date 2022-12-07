@@ -19,18 +19,26 @@ document.addEventListener("DOMContentLoaded", async function() {
     await window.shortcut.moveRegister({start, stop});
 
     applyIntervalChanges();
+    
+    const activeProcess = window.localStorage.getItem('activeProcess');
+    if(activeProcess)
+        document.getElementById('mover-btnStart').setAttribute('disabled', '');
 });
 
 async function startMouseMover(){
-    const isActive = (window.localStorage.getItem('isActive') == 'true');
-    if(isActive)
+    const activeProcess = window.localStorage.getItem('activeProcess');
+    if(activeProcess)
         return;
 
-    window.localStorage.setItem('isActive', 'true');
+    window.localStorage.setItem('activeProcess', 'mover');
     const hours = parseInt(document.getElementById("mover-interval-hour").value);
     let minutes = parseInt(document.getElementById("mover-interval-minute").value);
     let seconds = parseInt(document.getElementById("mover-interval-second").value);
     let miliseconds = 0;
+    
+    const x = parseInt(document.getElementById("mover-poss-x").value);
+    const y = parseInt(document.getElementById("mover-poss-y").value);
+    const time = document.getElementById("mover-poss-time").value;
 
     if(hours && hours > 0)
         minutes = minutes + (hours * 60)
@@ -42,8 +50,7 @@ async function startMouseMover(){
     console.log("start");
     await window.app.minimize();
     setInterval(async function(){
-        await window.mouse.move();
-        console.log('move');
+        await window.mouse.move({x, y, time});
       }, miliseconds)
       
     document.getElementById('mover-btnStart').setAttribute('disabled', '');
@@ -51,7 +58,7 @@ async function startMouseMover(){
 
 async function stopMouseMover(){
     console.log("stop");
-    window.localStorage.removeItem('isActive');
+    window.localStorage.removeItem('activeProcess');
     const interval_id = window.setInterval(function(){}, Number.MAX_SAFE_INTEGER);
     for (let i = 1; i < interval_id; i++) {
         window.clearInterval(i);
@@ -70,16 +77,20 @@ async function saveIntervalChanges(){
     const hours = parseInt(document.getElementById("mover-interval-hour").value);
     let minutes = parseInt(document.getElementById("mover-interval-minute").value);
     let seconds = parseInt(document.getElementById("mover-interval-second").value);
-    
     const start = document.getElementById("mover-key-start").value;
     const stop = document.getElementById("mover-key-stop").value;
-
+    const x = parseInt(document.getElementById("mover-poss-x").value);
+    const y = parseInt(document.getElementById("mover-poss-y").value);
+    const time = document.getElementById("mover-poss-time").value;
     const changes = {
         hours,
         minutes,
         seconds,
         start,
-        stop
+        stop,
+        x,
+        y,
+        time
     };
 
     window.localStorage.setItem('mover-interval', JSON.stringify(changes));
@@ -93,5 +104,8 @@ async function applyIntervalChanges(){
         document.getElementById("mover-interval-second").value = changes.seconds;
         document.getElementById("mover-key-start").value = changes.start;
         document.getElementById("mover-key-stop").value = changes.stop;
+        document.getElementById("mover-poss-x").value = changes.x;
+        document.getElementById("mover-poss-y").value = changes.y;
+        document.getElementById("mover-poss-time").value = changes.time;
     }
 }

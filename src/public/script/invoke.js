@@ -21,10 +21,10 @@ function handleInvokes(window) {
         mouseClick(arg.mouse, arg.action);
     });
 
-    ipcMain.handle('mouseMover', () => {
+    ipcMain.handle('mouseMover', (event, arg) => {
         const mouse = getMousePos();
-        moveMouse(mouse.x + 1, mouse.y + 1);
-        setTimeout(() => moveMouse(mouse.x, mouse.y), 100);
+        moveMouse(arg.x, arg.y);
+        setTimeout(() => moveMouse(mouse.x, mouse.y), arg.time);
     });
 
     ipcMain.handle('registerClickerShortcut', (event, arg) => {

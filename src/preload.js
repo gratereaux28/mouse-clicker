@@ -33,7 +33,7 @@ contextBridge.exposeInMainWorld('shortcut', {
 
 contextBridge.exposeInMainWorld('mouse', {
     click: (arg) => ipcRenderer.invoke('mouseClicker', arg),
-    move: () => ipcRenderer.invoke('mouseMover')
+    move: (arg) => ipcRenderer.invoke('mouseMover',arg)
 })
 
 contextBridge.exposeInMainWorld('darkMode', {
