@@ -69,10 +69,8 @@ const calledOnce = (e) => {
 function setGlobalShortcut(window) {
     globalShortcut.unregisterAll();
     globalShortcut.register('CommandOrControl+L', () => {
-      if (window.isVisible()){
+      if (window.isVisible())
         window.hide();
-        windowsHideNotification();
-    }
       else
         window.show();
     });
