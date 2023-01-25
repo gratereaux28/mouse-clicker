@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, shell, Tray, dialog } = require('electron');
+const { app, BrowserWindow, Menu, shell, Tray, dialog, powerMonitor } = require('electron');
 const path = require('path');
 const { getMenu, tryMenu } = require('./public/script/menu');
 const { windowsHideNotification } = require('./public/script/notification');
@@ -106,6 +106,7 @@ const createWindow = async () => {
 
   Menu.setApplicationMenu(getMenu(mainWindow));
   handleInvokes(mainWindow);
+  monitoring(mainWindow);
 };
 
 // This method will be called when Electron has finished
@@ -153,3 +154,12 @@ app.on('web-contents-created', (event, contents) => {
 app.on('before-quit', function () {
   app.isQuiting = true;
 });
+
+function monitoring(window) {
+  powerMonitor.on('unlock-screen', () => {
+    window.webContents.send('initActiveProcess');
+  });
+  powerMonitor.on('lock-screen', () => {
+    window.webContents.send('stopActiveProcess');
+  })
+}

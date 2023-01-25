@@ -8,7 +8,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.api.receive('toggleDarkMode', (theme) => {
         window.localStorage.setItem('theme', theme);
     });
+    
+    window.api.receive('initActiveProcess', async () => {
+        await initActiveProcess();
+    });
+    
+    window.api.receive('stopActiveProcess', async () => {
+        await stopActiveProcess();
+    });
 
+    await initActiveProcess();
+});
+
+async function initActiveProcess(){    
     const activeProcess = window.localStorage.getItem('activeProcess');
     if (activeProcess === 'clicker') {
         const clicker = JSON.parse(window.localStorage.getItem('clicker-interval'));
@@ -55,4 +67,17 @@ document.addEventListener("DOMContentLoaded", async function () {
             await window.mouse.move({x, y, time});
           }, miliseconds)
     }
-});
+}
+
+async function stopActiveProcess(){
+    const interval_id = window.setInterval(function(){}, Number.MAX_SAFE_INTEGER);
+    for (let i = 1; i < interval_id; i++) {
+        window.clearInterval(i);
+    }
+
+    if(document.getElementById('mover-btnStart'))
+        document.getElementById('mover-btnStart').removeAttribute('disabled');
+
+    if(document.getElementById('clicker-btnStart'))
+            document.getElementById('clicker-btnStart').removeAttribute('disabled');
+}
