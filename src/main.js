@@ -66,7 +66,9 @@ const createWindow = async () => {
           buttons: ['Sí', 'No'],
           title: 'Confirmación',
           message: 'Está seguro que desea cerrar la aplicación?',
-          detail: 'La aplicación siempre recordara su decisión.'
+          detail: 'La aplicación siempre recordara su decisión.',
+          noLink: true,
+          icon: path.join(__dirname, '/public/content/img/favicon.ico'),
         });
       if (choice == 0) {
         app.isQuiting = true;
